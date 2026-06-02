@@ -62,15 +62,15 @@ The following algorithms can be used:
 ```bash
 git clone https://github.com/sinchanayogesh19/online-payment-fraud-detection.git
 
-## Navigate to Project Directory
+#Navigate to Project Directory
 cd online-payment-fraud-detection
-Install Required Packages
+ ### Install Required Packages
 pip install -r requirements.txt
-Run the Application
+### Run the Application
 python app.py
-Output
 
-### The system predicts:
+### Output
+The system predicts:
 
 Legitimate Transaction
 Fraudulent Transaction
