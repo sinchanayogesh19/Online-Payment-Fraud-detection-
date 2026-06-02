@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fraud Detection System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .navbar h1 {
+            color: #333;
+            font-size: 24px;
+        }
+
+        .navbar-right {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .user-info {
+            color: #666;
+            font-weight: bold;
+        }
+
+        .logout-btn,
+        .dashboard-link {
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        .logout-btn {
+            background: #ff6b6b;
+        }
+
+        .logout-btn:hover {
+            background: #ee5a52;
+        }
+
+        .dashboard-link:hover {
+            background: #5568d3;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h2 {
+            color: #333;
+            margin-bottom: 25px;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0px 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .result-card {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .result-message {
+            font-size: 28px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
+        .result-high-risk {
+            color: #dc3545;
+        }
+
+        .result-low-risk {
+            color: #28a745;
+        }
+
+        .risk-badge {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .risk-high {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .risk-low {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .info-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .info-section h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .info-section p {
+            color: #666;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .transaction-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+        }
+
+        .detail-label {
+            color: #666;
+            font-weight: bold;
+        }
+
+        .detail-value {
+            color: #333;
+        }
+
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .navbar-right {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .dashboard-link,
+            .logout-btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            .transaction-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <h1>🔐 Fraud Detection System</h1>
+    <div class="navbar-right">
+        <span class="user-info">👤 {{ username }}</span>
+        <a href="/dashboard" class="dashboard-link">📊 Dashboard</a>
+        <a href="/logout" class="logout-btn">Logout</a>
+    </div>
+</div>
+
+<div class="container">
+    <div class="main-grid">
+        <div class="card">
+            <h2>💳 Check Transaction</h2>
+            <form id="fraudForm" action="/predict" method="post">
+                <div class="form-group">
+                    <label for="type">Transaction Type</label>
+                    <select id="type" name="type" required>
+                        <option value="">-- Select Type --</option>
+                        {% for t in types %}
+                        <option value="{{ t }}">{{ t }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="step">Step (Time)</label>
+                    <input type="number" id="step" name="step" step="0.01" placeholder="Enter step number" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="amount">Amount</label>
+                    <input type="number" id="amount" name="amount" step="0.01" placeholder="Enter amount" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="oldbalanceOrg">Old Balance (Sender)</label>
+                    <input type="number" id="oldbalanceOrg" name="oldbalanceOrg" step="0.01" placeholder="Enter sender's old balance" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="newbalanceOrig">New Balance (Sender)</label>
+                    <input type="number" id="newbalanceOrig" name="newbalanceOrig" step="0.01" placeholder="Enter sender's new balance" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="oldbalanceDest">Old Balance (Receiver)</label>
+                    <input type="number" id="oldbalanceDest" name="oldbalanceDest" step="0.01" placeholder="Enter receiver's old balance" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="newbalanceDest">New Balance (Receiver)</label>
+                    <input type="number" id="newbalanceDest" name="newbalanceDest" step="0.01" placeholder="Enter receiver's new balance" required>
+                </div>
+
+                <button type="submit" class="btn-submit">🔍 Analyze Transaction</button>
+            </form>
+
+            <div class="info-section">
+                <h3>ℹ️ How It Works</h3>
+                <p>
+                    This system uses machine learning to detect fraudulent transactions.
+                    Enter the transaction details and the model will analyze the pattern to determine if it's fraudulent or safe.
+                </p>
+            </div>
+        </div>
+
+        {% if prediction %}
+        <div class="result-card">
+            <h2>📋 Analysis Result</h2>
+
+            {% if risk_level == 'HIGH' %}
+            <div class="result-message result-high-risk">{{ prediction }}</div>
+            <div class="risk-badge risk-high">⚠️ HIGH RISK</div>
+            <div class="info-section">
+                <h3>🚨 Alert</h3>
+                <p>
+                    This transaction has been flagged as potentially fraudulent. Review the details before approving.
+                </p>
+            </div>
+            {% else %}
+            <div class="result-message result-low-risk">{{ prediction }}</div>
+            <div class="risk-badge risk-low">✅ LOW RISK</div>
+            <div class="info-section">
+                <h3>✔️ Safe</h3>
+                <p>
+                    This transaction appears safe based on model analysis.
+                </p>
+            </div>
+            {% endif %}
+
+            <div class="transaction-details">
+                <div class="detail-item">
+                    <span class="detail-label">Transaction Type:</span>
+                    <span class="detail-value">{{ request.form.get('type', 'N/A') }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Amount:</span>
+                    <span class="detail-value">${{ request.form.get('amount', '0') }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Sender Old Balance:</span>
+                    <span class="detail-value">${{ request.form.get('oldbalanceOrg', '0') }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Sender New Balance:</span>
+                    <span class="detail-value">${{ request.form.get('newbalanceOrig', '0') }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Receiver Old Balance:</span>
+                    <span class="detail-value">${{ request.form.get('oldbalanceDest', '0') }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Receiver New Balance:</span>
+                    <span class="detail-value">${{ request.form.get('newbalanceDest', '0') }}</span>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="result-card">
+            <h2>📊 Quick Stats</h2>
+            <div style="margin: 40px 0;">
+                <p style="color: #666; font-size: 16px; margin-bottom: 20px;">
+                    Welcome to the Fraud Detection System. Enter transaction details to evaluate fraud risk.
+                </p>
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 5px;">
+                    <p style="color: #666;">
+                        🤖 <strong>AI-Powered:</strong> Model analyzes fraud patterns<br>
+                        ⚡ <strong>Fast:</strong> Instant prediction<br>
+                        🛡️ <strong>Secure:</strong> Login required<br>
+                        📊 <strong>Dashboard:</strong> Fraud analytics and statistics
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    document.getElementById('fraudForm').addEventListener('submit', function(e) {
+        const step = parseFloat(document.getElementById('step').value);
+        const amount = parseFloat(document.getElementById('amount').value);
+        const typeValue = document.getElementById('type').value;
+
+        if (!typeValue) {
+            e.preventDefault();
+            alert('Please select a transaction type');
+            return false;
+        }
+
+        if (step < 0 || amount < 0) {
+            e.preventDefault();
+            alert('Step and Amount must be positive numbers');
+            return false;
+        }
+    });
+</script>
+
+</body>
+</html>
